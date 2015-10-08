@@ -1,0 +1,67 @@
+You are given two linked lists representing two non-negative numbers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 0 -> 8
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
+        {
+            if(l1 == null)
+            {
+                return l2;
+            }
+            if(l2 == null)
+            {
+                return l1;
+            }
+            if(l1==null&&l2==null)
+            {
+                return null;
+            }
+            ListNode result = new ListNode(0);
+            long i = 1;
+            ListNode temp1 = l1;
+            long sum = 0;
+            long sum1 = temp1.val;
+            while (temp1.next != null)
+            {
+                temp1 = temp1.next;
+                sum1 += temp1.val * (long)Math.Pow(10, i);
+                i++;
+            }
+            long j = 1;
+            ListNode temp2 = l2;
+            long sum2 = temp2.val;
+            while (temp2.next != null)
+            {
+                temp2 = temp2.next;
+                sum2 += temp2.val * (long)Math.Pow(10, j);
+                j++;
+            }
+            sum = sum1 + sum2;
+            if (sum == 0)
+            {
+                return result;
+            }
+            long k = 0;
+            ListNode temp = new ListNode(0);
+            ListNode tempList = result;
+            while (sum >= Math.Pow(10, k))
+            {
+                int tempvalue = (int)(sum / (long)Math.Pow(10, k) - sum / (long)Math.Pow(10, k + 1) * 10);
+                k++;
+                temp = new ListNode(tempvalue);
+                tempList.next = temp;
+                tempList = tempList.next;                
+            }
+            return result.next;
+        }
+}
