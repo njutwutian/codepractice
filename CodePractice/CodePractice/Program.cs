@@ -79,6 +79,88 @@ namespace CodePractice
                 Iterator(current.right,L,R);
             }
         }
+
+        public int TotalNQueens(int n)
+        {
+            int[,] array = new int[n, n];
+            for (int j = 0; j < n; j++)
+            {
+                array[0, j] = 1;
+                UpdateArrayStatus(array, 0, j, n, 1);
+                int count = 2;
+                for (int i = 1; i < n; i++)
+                {
+                    int y = GetAvailableQueen(array, i, n, count);
+                    if (y > -1)
+                    {
+                        UpdateArrayStatus(array, i, y, n, count);
+                        count++;
+                    }
+                }
+                PrintArray(array, n, count);
+                array = new int[n, n];
+
+
+            }
+
+            //int y = GetAvailableQueen(array, 0, n, 1);
+            //UpdateArrayStatus(array, 0, y, n, 1);
+            //GetAvailableQueen(array,n);
+            //PrintArray(array,n);
+
+            return n;
+        }
+
+        public int GetAvailableQueen(int[,] temp, int x, int n, int count)
+        {
+            int tempY = -1;
+            for (int i = 0; i < n; i++)
+            {
+                if (temp[x, i] == 0)
+                {
+                    temp[x, i] = count;
+                    tempY = i;
+                    Console.WriteLine("{0},{1}", x, i);
+                    return tempY;
+                }
+            }
+            return tempY;
+        }
+
+
+
+        int[,] UpdateArrayStatus(int[,] temp, int x, int y, int n, int count)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == x && j == y)
+                    {
+                        temp[i, j] = count;
+                    }
+                    else if (i == x || j == y || Math.Abs(i - x) == Math.Abs(j - y))
+                    {
+                        temp[i, j] = -1;
+                    }
+                }
+            }
+            return temp;
+        }
+
+        void PrintArray(int[,] temp, int n, int count)
+        {
+            Console.WriteLine("================RESULT:{0}================", count);
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    Console.Write(string.Format("{0,-5}", temp[i, j]));
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("================RESULT:{0}================", count);
+        }
     }
 
     public class TreeNode
