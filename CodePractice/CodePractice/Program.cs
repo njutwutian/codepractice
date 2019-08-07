@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace CodePractice
 {
@@ -6,7 +8,14 @@ namespace CodePractice
     {
         static void Main(string[] args)
         {
+            //List<List<string>> queenResult = new QueenSolution().solveNQueens(4);
             Console.WriteLine("Hello World!");
+            Console.WriteLine(new Program().MySqrt(66));
+            Console.WriteLine(new Program().MySqrt(128));
+            Console.WriteLine(new Program().MySqrt(166));
+            Console.WriteLine(new Program().MySqrt(266));
+            Console.WriteLine(new Program().MySqrt(366));
+            Console.ReadLine();
         }
 
         /// <summary>
@@ -33,7 +42,7 @@ namespace CodePractice
         public int NumJewelsInStones(string J, string S)
         {
             int result = 0;
-            if (J.Length == 0||S.Length==0)
+            if (J.Length == 0 || S.Length == 0)
             {
                 return result;
             }
@@ -47,6 +56,101 @@ namespace CodePractice
             }
             return result;
         }
+
+        /// <summary>
+        /// 709. To Lower Case
+        /// Runtime: 92 ms, faster than 32.49% of C# online submissions for To Lower Case.
+        /// Memory Usage: 20.7 MB, less than 5.15% of C# online submissions for To Lower Case.
+        /// </summary>
+        public string ToLowerCase(string str)
+        {
+            Byte[] bytes = Encoding.ASCII.GetBytes(str);
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                if (bytes[i] > 64 && bytes[i] < 91)
+                {
+                    bytes[i] = Convert.ToByte(bytes[i] + 32);
+                }
+            }
+            return Encoding.ASCII.GetString(bytes);
+        }
+
+        /// <summary>
+        /// 1021. Remove Outermost Parentheses
+        /// Runtime: 88 ms, faster than 85.36% of C# online submissions for Remove Outermost Parentheses.
+        /// Memory Usage: 21.7 MB, less than 66.18% of C# online submissions for Remove Outermost Parentheses.
+        /// </summary>
+        /// <param name="S"></param>
+        /// <returns></returns>
+        public string RemoveOuterParentheses(string S)
+        {
+            bool hashead = false;
+            StringBuilder sb = new StringBuilder();
+            int balance = 0;
+            foreach (var s in S)
+            {
+                if (s.Equals('('))
+                {
+                    balance++;
+                    if (hashead)
+                    {
+                        sb.Append(s);
+                    }
+                    else
+                    {
+                        hashead = true;
+                    }
+                }
+                else
+                {
+                    balance--;
+                    if (balance == 0)
+                    {
+                        hashead = false;
+                    }
+                    else
+                    {
+                        sb.Append(s);
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 804. Unique Morse Code Words
+        /// Runtime: 92 ms, faster than 96.56% of C# online submissions for Unique Morse Code Words.
+        /// Memory Usage: 23.4 MB, less than 6.52% of C# online submissions for Unique Morse Code Words.
+        /// </summary>
+        /// <param name="words"></param>
+        /// <returns></returns>
+        public int UniqueMorseRepresentations(string[] words)
+        {
+            var transformations = new Dictionary<string,int>();
+            for (int i = 0; i < words.Length; i++)
+            {
+                string temp = WordToMorse(words[i]);
+                if (!transformations.ContainsKey(temp)) {
+                    transformations.Add(temp,0);
+                }                
+            }
+            return transformations.Count;
+        }
+
+        private string WordToMorse(string word)
+        {
+            var morseCode = new string[] {".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",
+            ".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."};
+            var sb = new StringBuilder();
+
+            for (int i = 0; i < word.Length; i++)
+            {
+                sb.Append(morseCode[word[i] - 'a']);
+            }
+
+            return sb.ToString();
+        }
+
 
         /// <summary>
         /// 938. Range Sum of BST
@@ -68,16 +172,67 @@ namespace CodePractice
         {
             if (current.left != null && current.val >= L)
             {
-                Iterator(current.left,L,R);
+                Iterator(current.left, L, R);
             }
             if (current.val >= L && current.val <= R)
             {
                 RangeSumBSTResult = RangeSumBSTResult + current.val;
             }
-            if (current.right != null && current.val <=R)
+            if (current.right != null && current.val <= R)
             {
-                Iterator(current.right,L,R);
+                Iterator(current.right, L, R);
             }
+        }
+
+        /// <summary>
+        /// 69. Sqrt(x)
+        /// Runtime: 52 ms, faster than 26.96% of C# online submissions for Sqrt(x).
+        /// Runtime: 44 ms, faster than 56.41% of C# online submissions for Sqrt(x).
+        /// Runtime: 36 ms, faster than 97.83% of C# online submissions for Sqrt(x).
+        /// Memory Usage: 12.8 MB, less than 100.00% of C# online submissions for Sqrt(x).
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public int MySqrt(int x)
+        {
+            if (x <= 1) {
+                return x;
+            }
+            int start = 1;
+            int end = x;
+            int mid = start + (end - start) / 2;
+
+            // i^2 <=x &&i+1^2 >x 
+            while (true)
+            {
+                if (mid <= x /mid && ((mid + 1) > x / (mid + 1)))
+                {
+                    return mid;
+                }
+                if (mid < x / mid)
+                {
+                    start = mid+1;
+                    mid = start + (end-start) / 2;
+                }
+                else {
+                    end = mid-1;
+                    mid = start + (end - start) / 2;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 914. X of a Kind in a Deck of Cards
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
+        public bool HasGroupsSizeX(int[] deck)
+        {
+            if (deck.Length >= 2)
+            {
+
+            }
+            return false;
         }
 
         public int TotalNQueens(int n)
@@ -165,9 +320,9 @@ namespace CodePractice
 
     public class TreeNode
     {
-      public int val;
-      public TreeNode left;
-      public TreeNode right;
-      public TreeNode(int x) { val = x; }
+        public int val;
+        public TreeNode left;
+        public TreeNode right;
+        public TreeNode(int x) { val = x; }
     }
 }
